@@ -1,9 +1,15 @@
 import Link from 'next/link';
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 
 export default function WorkoutCreate() {
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    alert((e.target as any).name.value);
+  const [name, setName] = useState('');
+
+  function handleChange(e: FormEvent<HTMLInputElement>) {
+    setName((e.target as any).value);
+  }
+
+  function handleSubmit() {
+    alert(name);
   }
 
   return (
@@ -12,7 +18,7 @@ export default function WorkoutCreate() {
       <form onSubmit={handleSubmit}>
         <label>
           Name:
-          <input type="text" name="name" />
+          <input type="text" value={name} onChange={handleChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>
