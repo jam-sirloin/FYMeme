@@ -12,18 +12,10 @@ export default function WorkoutCreate() {
     e.preventDefault(); // 페이지 리로딩 방지
 
     const myWorkoutList = localStorage.getItem('myWorkoutList');
+    const newWorkoutList = myWorkoutList ? JSON.parse(myWorkoutList) : [];
 
-    if (!myWorkoutList) {
-      const newWorkoutList = [];
-
-      newWorkoutList.push(name);
-      localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
-    } else {
-      const newWorkoutList = JSON.parse(myWorkoutList);
-
-      newWorkoutList.push(name);
-      localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
-    }
+    newWorkoutList.push(name);
+    localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
 
     alert(name);
     setName('');
