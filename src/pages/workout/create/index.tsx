@@ -8,7 +8,9 @@ export default function WorkoutCreate() {
     setName((e.target as any).value);
   }
 
-  function handleSubmit() {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // 페이지 리로딩 방지
+
     alert(name);
   }
 
