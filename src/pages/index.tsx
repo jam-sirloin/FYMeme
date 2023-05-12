@@ -1,7 +1,10 @@
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function Home() {
-  console.log(localStorage.getItem('myWorkoutList'));
+  useEffect(() => {
+    console.log(localStorage.getItem('myWorkoutList'));
+  }, []);
 
   return (
     <main>
