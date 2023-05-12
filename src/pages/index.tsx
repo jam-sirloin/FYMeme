@@ -1,6 +1,8 @@
 import Link from 'next/link';
 
 export default function Home() {
+  console.log(localStorage.getItem('myWorkoutList'));
+
   return (
     <main>
       <h1>메인 페이지</h1>
