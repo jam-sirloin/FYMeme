@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { FormEvent, useState } from 'react';
 
 export default function WorkoutCreate() {
-  const [name, setName] = useState('');
+  const [workoutName, setWorkoutName] = useState('');
 
   function handleChange(e: FormEvent<HTMLInputElement>) {
-    setName((e.target as any).value);
+    setWorkoutName((e.target as any).value);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -14,11 +14,11 @@ export default function WorkoutCreate() {
     const myWorkoutList = localStorage.getItem('myWorkoutList');
     const newWorkoutList = myWorkoutList ? JSON.parse(myWorkoutList) : [];
 
-    newWorkoutList.push(name);
+    newWorkoutList.push(workoutName);
     localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
 
-    alert(name);
-    setName('');
+    alert(workoutName);
+    setWorkoutName('');
   }
 
   return (
@@ -27,7 +27,7 @@ export default function WorkoutCreate() {
       <form onSubmit={handleSubmit}>
         <label>
           Name:
-          <input type="text" value={name} onChange={handleChange} />
+          <input type="text" value={workoutName} onChange={handleChange} />
         </label>
         <input type="submit" value="Submit" />
       </form>
