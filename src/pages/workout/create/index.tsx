@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
 export default function WorkoutCreate() {
   const [workoutName, setWorkoutName] = useState('');
 
-  function handleChange(e: FormEvent<HTMLInputElement>) {
-    setWorkoutName((e.target as any).value);
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    setWorkoutName(e.target.value);
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
