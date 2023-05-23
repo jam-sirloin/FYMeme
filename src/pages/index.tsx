@@ -12,12 +12,14 @@ export default function Home() {
   const workoutList = useMemo(() => {
     if (!mounted) return null; // to solve hydration error
 
-    const myWorkoutList =
-      typeof window !== 'undefined'
-        ? localStorage.getItem('myWorkoutList')
-        : null;
+    try {
+      const myWorkoutList = localStorage.getItem('myWorkoutList');
 
-    return myWorkoutList ? JSON.parse(myWorkoutList) : [];
+      return myWorkoutList ? (JSON.parse(myWorkoutList) as string[]) : [];
+    } catch (error) {
+      console.error(`Error accessing localStorage: ${error}`);
+      return null;
+    }
   }, [mounted]);
 
   return (
