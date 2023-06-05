@@ -75,7 +75,7 @@ export default function WorkoutCreate({ data }: Props) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const baseUrl =
     process.env.NODE_ENV === 'production'
       ? 'https://my-workout-app.vercel.app'
