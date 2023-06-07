@@ -33,6 +33,11 @@ export default function WorkoutCreate({ data }: Props) {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault(); // 페이지 리로딩 방지
 
+    if (workoutName.length === 0) {
+      alert('운동 이름을 입력해주세요.');
+      return;
+    }
+
     try {
       const myWorkoutList = localStorage.getItem('myWorkoutList');
       const newWorkoutList = myWorkoutList
