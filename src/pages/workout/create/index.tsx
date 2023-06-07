@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
 
 import { Trainer } from '@/interfaces';
 
@@ -8,18 +8,26 @@ type Props = {
 };
 
 export default function WorkoutCreate({ data }: Props) {
-  const [workoutName, setWorkoutName] = useState('');
-  const [trainerList, setTrainerList] = useState<string[] | null>(null);
-
-  useEffect(() => {
-    if (!data) return;
-
-    const myTrainerList = data.map((trainer: Trainer) => trainer.name);
-    setTrainerList(myTrainerList);
+  const trainerList = useMemo(() => {
+    return data.map((trainer: Trainer) => trainer.name);
   }, [data]);
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setWorkoutName(e.target.value);
+  const DEFAULT_FORM_VALUES = {
+    trainerName: trainerList[0],
+    workoutName: '',
+  };
+
+  const [workoutForm, setWorkoutForm] = useState(DEFAULT_FORM_VALUES);
+
+  const { trainerName, workoutName } = workoutForm;
+
+  function handleChange(e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
+    const { name, value } = e.target;
+
+    setWorkoutForm({
+      ...workoutForm,
+      [name]: value,
+    });
   }
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -34,8 +42,8 @@ export default function WorkoutCreate({ data }: Props) {
       newWorkoutList.push(workoutName);
       localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
 
-      alert(workoutName);
-      setWorkoutName('');
+      alert(`${workoutName} (with ${trainerName})`);
+      setWorkoutForm(DEFAULT_FORM_VALUES);
     } catch (error) {
       alert(`Error accessing localStorage: ${error}`);
     }
@@ -55,18 +63,24 @@ export default function WorkoutCreate({ data }: Props) {
       >
         <label>
           Today&apos;s Trainer:
-          <select>
-            {trainerList &&
-              trainerList.map((trainerName: string, index: number) => (
-                <option key={index} value={trainerName}>
-                  {trainerName}
-                </option>
-              ))}
+          <select
+            name="trainerName"
+            value={trainerName}
+            onChange={handleChange}
+          >
+            {trainerList.map((trainerName: string, index: number) => (
+              <option key={index}>{trainerName}</option>
+            ))}
           </select>
         </label>
         <label>
           Today&apos;s Workout:
-          <input type="text" value={workoutName} onChange={handleChange} />
+          <input
+            type="text"
+            name="workoutName"
+            value={workoutName}
+            onChange={handleChange}
+          />
         </label>
         <input type="submit" value="Submit" />
       </form>
