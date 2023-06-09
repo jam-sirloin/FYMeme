@@ -4,7 +4,9 @@ import { Controller, useForm, useWatch } from 'react-hook-form';
 import { NONE } from '@/constants';
 import { IOption } from '@/interfaces';
 
-const DEFAULT_FORM_VALUES = {
+import { IWorkoutForm } from './WorkoutForm.interface';
+
+const DEFAULT_FORM_VALUES: IWorkoutForm = {
   trainerCode: NONE,
   workoutName: '',
 };
@@ -14,7 +16,7 @@ type Props = {
 };
 
 export default function WorkoutForm({ trainerList }: Props) {
-  const { control, handleSubmit, reset } = useForm({
+  const { control, handleSubmit, reset } = useForm<IWorkoutForm>({
     defaultValues: DEFAULT_FORM_VALUES,
   });
 
