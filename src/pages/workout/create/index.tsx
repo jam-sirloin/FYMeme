@@ -2,15 +2,25 @@ import Link from 'next/link';
 import { useMemo } from 'react';
 
 import WorkoutForm from '@/components/workout/WorkoutForm';
-import { Trainer } from '@/interfaces';
+import { NONE } from '@/constants';
+import { IOption, ITrainer } from '@/interfaces';
 
 type Props = {
-  data: Trainer[];
+  data: ITrainer[];
 };
 
 export default function WorkoutCreate({ data }: Props) {
-  const trainerList: string[] = useMemo(() => {
-    return data.map((trainer: Trainer) => trainer.name);
+  const trainerList: IOption[] = useMemo(() => {
+    return [
+      {
+        label: '(없음)',
+        value: NONE,
+      },
+      ...data.map((trainer: ITrainer) => ({
+        label: trainer.name,
+        value: trainer.id,
+      })),
+    ];
   }, [data]);
 
   return (

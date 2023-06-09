@@ -1,23 +1,21 @@
 import { useCallback } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 
+import { NONE } from '@/constants';
+import { IOption } from '@/interfaces';
+
+const DEFAULT_FORM_VALUES = {
+  trainerCode: NONE,
+  workoutName: '',
+};
+
 type Props = {
-  trainerList: string[];
+  trainerList: IOption[];
 };
 
 export default function WorkoutForm({ trainerList }: Props) {
-  const DEFAULT_FORM_VALUES = {
-    trainerName: trainerList[0],
-    workoutName: '',
-  };
-
   const { control, handleSubmit, reset } = useForm({
     defaultValues: DEFAULT_FORM_VALUES,
-  });
-
-  const trainerName = useWatch({
-    control,
-    name: 'trainerName',
   });
 
   const workoutName = useWatch({
@@ -40,12 +38,12 @@ export default function WorkoutForm({ trainerList }: Props) {
       newWorkoutList.push(workoutName);
       localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
 
-      alert(`${workoutName} (with ${trainerName})`);
+      alert('운동이 등록되었습니다.');
       reset();
     } catch (error) {
       alert(`Error accessing localStorage: ${error}`);
     }
-  }, [reset, trainerName, workoutName]);
+  }, [reset, workoutName]);
 
   return (
     <form
@@ -61,12 +59,12 @@ export default function WorkoutForm({ trainerList }: Props) {
         Today&apos;s Trainer:
         <Controller
           control={control}
-          name="trainerName"
+          name="trainerCode"
           render={({ field }) => (
             <select {...field}>
-              {trainerList.map((trainerName: string, index: number) => (
-                <option key={index} value={trainerName}>
-                  {trainerName}
+              {trainerList.map((option: IOption, index: number) => (
+                <option key={index} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
