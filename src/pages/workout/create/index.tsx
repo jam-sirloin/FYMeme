@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { ChangeEvent, FormEvent, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 
 import { Trainer } from '@/interfaces';
 
@@ -17,22 +18,16 @@ export default function WorkoutCreate({ data }: Props) {
     workoutName: '',
   };
 
-  const [workoutForm, setWorkoutForm] = useState(DEFAULT_FORM_VALUES);
+  const reactHookForm = useForm({
+    defaultValues: DEFAULT_FORM_VALUES,
+  });
 
-  const { trainerName, workoutName } = workoutForm;
+  const { control, handleSubmit, reset } = reactHookForm;
 
-  function handleChange(e: ChangeEvent<HTMLSelectElement | HTMLInputElement>) {
-    const { name, value } = e.target;
+  const trainerName = useWatch({ control, name: 'trainerName' });
+  const workoutName = useWatch({ control, name: 'workoutName' });
 
-    setWorkoutForm({
-      ...workoutForm,
-      [name]: value,
-    });
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault(); // 페이지 리로딩 방지
-
+  function onSubmit() {
     if (workoutName.length === 0) {
       alert('운동 이름을 입력해주세요.');
       return;
@@ -48,7 +43,7 @@ export default function WorkoutCreate({ data }: Props) {
       localStorage.setItem('myWorkoutList', JSON.stringify(newWorkoutList));
 
       alert(`${workoutName} (with ${trainerName})`);
-      setWorkoutForm(DEFAULT_FORM_VALUES);
+      reset();
     } catch (error) {
       alert(`Error accessing localStorage: ${error}`);
     }
@@ -58,7 +53,7 @@ export default function WorkoutCreate({ data }: Props) {
     <main>
       <h1>등록 페이지</h1>
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -68,23 +63,26 @@ export default function WorkoutCreate({ data }: Props) {
       >
         <label>
           Today&apos;s Trainer:
-          <select
+          <Controller
+            control={control}
             name="trainerName"
-            value={trainerName}
-            onChange={handleChange}
-          >
-            {trainerList.map((trainerName: string, index: number) => (
-              <option key={index}>{trainerName}</option>
-            ))}
-          </select>
+            render={({ field }) => (
+              <select {...field}>
+                {trainerList.map((trainerName: string, index: number) => (
+                  <option key={index} value={trainerName}>
+                    {trainerName}
+                  </option>
+                ))}
+              </select>
+            )}
+          />
         </label>
         <label>
           Today&apos;s Workout:
-          <input
-            type="text"
+          <Controller
+            control={control}
             name="workoutName"
-            value={workoutName}
-            onChange={handleChange}
+            render={({ field }) => <input type="text" {...field} />}
           />
         </label>
         <input type="submit" value="Submit" />
